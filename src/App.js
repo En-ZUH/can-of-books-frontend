@@ -19,6 +19,24 @@ class App extends React.Component {
     return (
       <>
         <Router>
+ 
+          {/* <IsLoadingAndError> */}
+          <Header />
+          <Switch>
+            <Route exact path="/">
+              {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
+
+              <BestBooks />
+              <Login />
+
+
+
+            </Route>
+            {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
+          </Switch>
+          <Footer />
+          {/* </IsLoadingAndError> */}
+ 
           <IsLoadingAndError>
             <Header />
             <Switch>
@@ -38,6 +56,7 @@ class App extends React.Component {
             </Switch>
             <Footer />
           </IsLoadingAndError>
+ 
         </Router>
       </>
     );

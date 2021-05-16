@@ -7,9 +7,11 @@ function LoginButton() {
         isAuthenticated,
         loginWithRedirect,
     } = useAuth0();
-
+    console.log(isAuthenticated);
     return !isAuthenticated && (
         <button onClick={loginWithRedirect}>Log in</button>
     );
 }
+
+
 export default LoginButton;
