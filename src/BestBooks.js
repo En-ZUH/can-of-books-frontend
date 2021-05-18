@@ -7,6 +7,8 @@ import { withAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import FormBooks from './FormBooks';
+
 
 
 class MyFavoriteBooks extends React.Component {
@@ -15,6 +17,10 @@ class MyFavoriteBooks extends React.Component {
     super(props);
     this.state = {
       book: [],
+      email: '',
+      bookName: '',
+      discOfBook: '',
+      statusOfBooks: ''
 
     }
 
@@ -29,6 +35,27 @@ class MyFavoriteBooks extends React.Component {
   }
 
 
+  updateEmail = (e) => this.setState({ email: e.target.value });
+  updateBookName = (e) => this.setState({ bookName: e.target.value });
+  updateDiscOfBook = (e) => this.setState({ discOfBook: e.target.value });
+  updateStatusOfBook = (e) => this.setState({ statusOfBooks: e.target.value });
+
+  addBook = async (e) => {
+    e.preventDefault();
+
+    const bodyData = {
+      name: this.state.bookName,
+      description: this.state.discOfBook,
+      status: this.state.statusOfBooks,
+      email: this.state.email
+    }
+
+    const newBook = await axios.post(`${process.env.REACT_APP_HOST}/books`, bodyData);
+
+    this.setState({
+      book: newBook.data
+    })
+  }
 
   render() {
 
@@ -51,6 +78,11 @@ class MyFavoriteBooks extends React.Component {
             </ListGroup>  </Card>;
         })}
 
+        <FormBooks
+          updateEmail={this.updateEmail}
+          updateBookName={this.updateBookName}
+          updateDiscOfBook={this.updateDiscOfBook}
+          updateStatusOfBook={this.updateStatusOfBook} />
       </Jumbotron>
 
     );
