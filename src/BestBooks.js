@@ -7,7 +7,9 @@ import { withAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import FormBooks from './FormBooks';
+import BookFormModal from './BookFormModal';
+import Button from 'react-bootstrap/Button';
+import  Alert  from 'react-bootstrap/Alert';
 // import { Form } from 'react-bootstrap';
 
 
@@ -79,6 +81,20 @@ class MyFavoriteBooks extends React.Component {
     })
   }
 
+  deleteBook = async (index) => {
+    const newArrayOfBooks = this.state.book.filter((cat, idx) => {
+      return idx !== index;
+    });
+    this.setState({
+      book: newArrayOfBooks
+    })
+
+    const query = {
+      email: this.props.auth0.user.email
+    }
+    await axios.delete(`${process.env.REACT_APP_HOST}/books/${index}`, { params: query })
+  }
+
   render() {
 
     return (
@@ -91,7 +107,7 @@ class MyFavoriteBooks extends React.Component {
           This is a collection of my favorite books
         </p>
 
-        <FormBooks
+        <BookFormModal
           addBook={this.addBook}
 
           updateBookName={this.updateBookName}
@@ -100,16 +116,24 @@ class MyFavoriteBooks extends React.Component {
         />
 
         {
-          this.state.book.map(ele => {
-            return <Card style={{ width: '18rem' }}>
-              <ListGroup variant="flush">
-                <ListGroup.Item as="li" active>book Nam:
+          this.state.book.map((ele, indx) => {
+            return (
+              <>
+                <Card style={{ width: '18rem', margin:'26px auto' }}>
+                <ListGroup variant="flush">
+                  <ListGroup.Item as="li">Book Name:
                 {ele.name}</ListGroup.Item>
-                <ListGroup.Item>description: {ele.description}</ListGroup.Item>
-                <ListGroup.Item>status: {ele.status}</ListGroup.Item>
-              </ListGroup>  </Card>;
-          })
-        }
+                  <ListGroup.Item>Description: {ele.description}</ListGroup.Item>
+                  <ListGroup.Item>Status: {ele.status}</ListGroup.Item>
+                </ListGroup>
+                
+                <Button  className='m-3 btn btn-danger'  onClick={() => this.deleteBook(indx)}>Delete Book</Button>
+                
+              </Card>;
+              </>
+    )
+  })
+}
 
 
       </Jumbotron >

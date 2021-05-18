@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export class FormBooks extends Component {
+export class BookFormModal extends Component {
     render() {
         return (
             <div>
@@ -22,4 +22,4 @@ export class FormBooks extends Component {
     }
 }
 
-export default FormBooks
+export default BookFormModal
