@@ -8,6 +8,8 @@ import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import FormBooks from './FormBooks';
+// import { Form } from 'react-bootstrap';
+
 
 
 
@@ -17,10 +19,10 @@ class MyFavoriteBooks extends React.Component {
     super(props);
     this.state = {
       book: [],
-      email: '',
-      bookName: '',
-      discOfBook: '',
-      statusOfBooks: ''
+
+      name: '',
+      description: '',
+      status: ''
 
     }
 
@@ -34,20 +36,40 @@ class MyFavoriteBooks extends React.Component {
     this.setState({ book: showApiUrlbook.data });
   }
 
+  addBook = async (e) => {
+    e.preventDefault();
 
-  updateEmail = (e) => this.setState({ email: e.target.value });
-  updateBookName = (e) => this.setState({ bookName: e.target.value });
-  updateDiscOfBook = (e) => this.setState({ discOfBook: e.target.value });
-  updateStatusOfBook = (e) => this.setState({ statusOfBooks: e.target.value });
+    // sending the request to backend 
+    const bodyData = {
+      name: this.state.name,
+      status: this.state.status,
+      description: this.state.description,
+      email: this.props.auth0.user.email
+
+    }
+    const newBook = await axios.post(`${this.state.server}/book`, bodyData);
+
+
+    this.setState({
+      book: newBook.data
+    })
+  }
+
+
+
+  updateBookName = (e) => this.setState({ name: e.target.value });
+  updateDiscOfBook = (e) => this.setState({ description: e.target.value });
+  updateStatusOfBook = (e) => this.setState({ status: e.target.value });
 
   addBook = async (e) => {
     e.preventDefault();
 
     const bodyData = {
-      name: this.state.bookName,
-      description: this.state.discOfBook,
-      status: this.state.statusOfBooks,
-      email: this.state.email
+      name: this.state.name,
+      description: this.state.description,
+      status: this.state.status,
+      email: this.props.auth0.user.email
+
     }
 
     const newBook = await axios.post(`${process.env.REACT_APP_HOST}/books`, bodyData);
@@ -60,31 +82,38 @@ class MyFavoriteBooks extends React.Component {
   render() {
 
     return (
+      //<>
+      //{this.state.books.length>0
 
-      <Jumbotron>
+      <Jumbotron   >
         <h1>My Favorite Books</h1>
         <p>
           This is a collection of my favorite books
         </p>
 
-
-        {this.state.book.map(ele => {
-          return <Card style={{ width: '18rem' }}>
-            <ListGroup variant="flush">
-              <ListGroup.Item as="li" active>book Nam:
-                {ele.name}</ListGroup.Item>
-              <ListGroup.Item>description: {ele.description}</ListGroup.Item>
-              <ListGroup.Item>status: {ele.status}</ListGroup.Item>
-            </ListGroup>  </Card>;
-        })}
-
         <FormBooks
-          updateEmail={this.updateEmail}
+          addBook={this.addBook}
+
           updateBookName={this.updateBookName}
           updateDiscOfBook={this.updateDiscOfBook}
-          updateStatusOfBook={this.updateStatusOfBook} />
-      </Jumbotron>
+          updateStatusOfBook={this.updateStatusOfBook}
+        />
 
+        {
+          this.state.book.map(ele => {
+            return <Card style={{ width: '18rem' }}>
+              <ListGroup variant="flush">
+                <ListGroup.Item as="li" active>book Nam:
+                {ele.name}</ListGroup.Item>
+                <ListGroup.Item>description: {ele.description}</ListGroup.Item>
+                <ListGroup.Item>status: {ele.status}</ListGroup.Item>
+              </ListGroup>  </Card>;
+          })
+        }
+
+
+      </Jumbotron >
+      //} </>
     );
 
   }
