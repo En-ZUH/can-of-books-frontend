@@ -20,7 +20,7 @@ class MyFavoriteBooks extends React.Component {
 
 
   }
-  
+
   componentDidMount = async () => {
     const { user } = this.props.auth0;
     const myBooks = `${process.env.REACT_APP_HOST}/books?email=${user.email}`;
@@ -40,7 +40,7 @@ class MyFavoriteBooks extends React.Component {
           This is a collection of my favorite books
         </p>
 
-     
+
         {this.state.book.map(ele => {
           return <Card style={{ width: '18rem' }}>
             <ListGroup variant="flush">
