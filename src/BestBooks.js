@@ -9,8 +9,9 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import BookFormModal from './BookFormModal';
 import Button from 'react-bootstrap/Button';
-import  Alert  from 'react-bootstrap/Alert';
-// import { Form } from 'react-bootstrap';
+import Alert from 'react-bootstrap/Alert';
+
+import UpdateForm from './UpdateForm';
 
 
 
@@ -24,7 +25,9 @@ class MyFavoriteBooks extends React.Component {
 
       name: '',
       description: '',
-      status: ''
+      status: '',
+      showUpdateForm: false,
+      index: 0
 
     }
 
@@ -38,11 +41,11 @@ class MyFavoriteBooks extends React.Component {
     this.setState({ book: showApiUrlbook.data });
   }
 
-  addBook = async (e) => {
+  addBook = async (e) => {// sending the request to backend 
     e.preventDefault();
 
-    // sending the request to backend 
-    const bodyData = {
+
+    const bodyData = { // passing the info inside the body
       name: this.state.name,
       status: this.state.status,
       description: this.state.description,
@@ -95,6 +98,46 @@ class MyFavoriteBooks extends React.Component {
     await axios.delete(`${process.env.REACT_APP_HOST}/books/${index}`, { params: query })
   }
 
+
+  update = async (e) => {
+    e.preventDefault();
+    const reqBody = {
+      name: this.state.name,
+      status: this.state.status,
+      description: this.state.description,
+
+      email: this.props.auth0.user.email
+    }
+    const newBook = await axios.put(`${process.env.REACT_APP_HOST}/books/${this.state.index}`, reqBody); //put to update// send data to server
+
+    this.setState({
+      book: newBook.data
+    });
+
+  }
+
+  showUpdateForm = (idx) => {
+
+    // Filter the cats by by the index to choose the cat information that we want to pass down to the component 
+    const newBook = this.state.book.filter((value, index) => {
+      return idx === index
+
+    });
+
+    console.log(newBook);
+
+    this.setState({
+      index: idx,
+      name: newBook[0].name,
+      status: newBook[0].status,
+      description: newBook[0].description,
+      showUpdate: true
+    });
+  }
+
+
+
+
   render() {
 
     return (
@@ -115,25 +158,38 @@ class MyFavoriteBooks extends React.Component {
           updateStatusOfBook={this.updateStatusOfBook}
         />
 
+        {this.state.showUpdate &&
+          <UpdateForm
+
+            update={this.update}
+            name={this.state.name}
+            description={this.state.description}
+            status={this.state.status}
+            updateBookName={this.updateBookName}
+            updateDiscOfBook={this.updateDiscOfBook}
+            updateStatusOfBook={this.updateStatusOfBook}
+
+          />}
+
         {
           this.state.book.map((ele, indx) => {
             return (
               <>
-                <Card style={{ width: '18rem', margin:'26px auto' }}>
-                <ListGroup variant="flush">
-                  <ListGroup.Item as="li">Book Name:
+                <Card style={{ width: '18rem', margin: '26px auto' }}>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item as="li">Book Name:
                 {ele.name}</ListGroup.Item>
-                  <ListGroup.Item>Description: {ele.description}</ListGroup.Item>
-                  <ListGroup.Item>Status: {ele.status}</ListGroup.Item>
-                </ListGroup>
-                
-                <Button  className='m-3 btn btn-danger'  onClick={() => this.deleteBook(indx)}>Delete Book</Button>
-                
-              </Card>;
+                    <ListGroup.Item>Description: {ele.description}</ListGroup.Item>
+                    <ListGroup.Item>Status: {ele.status}</ListGroup.Item>
+                  </ListGroup>
+
+                  <Button className='m-3 btn btn-danger' onClick={() => this.deleteBook(indx)}>Delete Book</Button>
+                  <Button className='m-3 btn btn-danger' onClick={() => this.showUpdateForm(indx)}>Update Book</Button>
+                </Card>;
               </>
-    )
-  })
-}
+            )
+          })
+        }
 
 
       </Jumbotron >
