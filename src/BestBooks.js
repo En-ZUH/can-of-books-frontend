@@ -70,8 +70,8 @@ class MyFavoriteBooks extends React.Component {
 
     const bodyData = {
       name: this.state.name,
-      description: this.state.description,
       status: this.state.status,
+      description: this.state.description,
       email: this.props.auth0.user.email
 
     }
@@ -110,7 +110,7 @@ class MyFavoriteBooks extends React.Component {
 
     this.setState({
       book: newBook.data
-    });
+    })
 
   }
 
@@ -139,7 +139,6 @@ class MyFavoriteBooks extends React.Component {
     return (
       //<>
       //{this.state.books.length>0
-
       <Jumbotron   >
         <h1>My Favorite Books</h1>
         <p>
