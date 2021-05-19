@@ -71,8 +71,8 @@ class MyFavoriteBooks extends React.Component {
 
     const bodyData = {
       name: this.state.name,
-      description: this.state.description,
       status: this.state.status,
+      description: this.state.description,
       email: this.props.auth0.user.email
 
     }
@@ -105,14 +105,13 @@ class MyFavoriteBooks extends React.Component {
       name: this.state.name,
       status: this.state.status,
       description: this.state.description,
-
       email: this.props.auth0.user.email
     }
     const newBook = await axios.put(`${process.env.REACT_APP_HOST}/books/${this.state.index}`, reqBody); //put to update// send data to server
 
     this.setState({
       book: newBook.data
-    });
+    })
 
   }
 
@@ -120,7 +119,7 @@ class MyFavoriteBooks extends React.Component {
 
     // Filter the cats by by the index to choose the cat information that we want to pass down to the component 
     const newBook = this.state.book.filter((value, index) => {
-      return idx === index
+      return idx === index;
 
     });
 
@@ -143,7 +142,6 @@ class MyFavoriteBooks extends React.Component {
     return (
       //<>
       //{this.state.books.length>0
-
       <Jumbotron   >
         <h1>My Favorite Books</h1>
         <p>
