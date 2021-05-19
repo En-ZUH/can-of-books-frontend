@@ -9,7 +9,6 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import BookFormModal from './BookFormModal';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
 
 import UpdateForm from './UpdateForm';
 
@@ -85,7 +84,7 @@ class MyFavoriteBooks extends React.Component {
   }
 
   deleteBook = async (index) => {
-    const newArrayOfBooks = this.state.book.filter((cat, idx) => {
+    const newArrayOfBooks = this.state.book.filter((val, idx) => {
       return idx !== index;
     });
     this.setState({
@@ -105,7 +104,6 @@ class MyFavoriteBooks extends React.Component {
       name: this.state.name,
       status: this.state.status,
       description: this.state.description,
-
       email: this.props.auth0.user.email
     }
     const newBook = await axios.put(`${process.env.REACT_APP_HOST}/books/${this.state.index}`, reqBody); //put to update// send data to server
@@ -118,13 +116,11 @@ class MyFavoriteBooks extends React.Component {
 
   showUpdateForm = (idx) => {
 
-    // Filter the cats by by the index to choose the cat information that we want to pass down to the component 
     const newBook = this.state.book.filter((value, index) => {
-      return idx === index
+      return idx === index;
 
     });
 
-    console.log(newBook);
 
     this.setState({
       index: idx,
@@ -158,6 +154,28 @@ class MyFavoriteBooks extends React.Component {
           updateStatusOfBook={this.updateStatusOfBook}
         />
 
+
+
+        {
+          this.state.book.map((ele, indx) => {
+            return (
+              <>
+                <Card style={{ width: '18rem', margin: '26px auto' }}>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item as="li">Book Name:{ele.name}</ListGroup.Item>
+                    <ListGroup.Item>Description: {ele.description}</ListGroup.Item>
+                    <ListGroup.Item>Status: {ele.status}</ListGroup.Item>
+                  </ListGroup>
+
+                  <Button className='m-3 btn btn-danger' onClick={() => this.deleteBook(indx)}>Delete Book</Button>
+                  <Button className='m-3' onClick={() => this.showUpdateForm(indx)}>Update Book</Button>
+                </Card>
+              </>
+            )
+
+          })
+        }
+
         {this.state.showUpdate &&
           <UpdateForm
 
@@ -171,29 +189,8 @@ class MyFavoriteBooks extends React.Component {
 
           />}
 
-        {
-          this.state.book.map((ele, indx) => {
-            return (
-              <>
-                <Card style={{ width: '18rem', margin: '26px auto' }}>
-                  <ListGroup variant="flush">
-                    <ListGroup.Item as="li">Book Name:
-                {ele.name}</ListGroup.Item>
-                    <ListGroup.Item>Description: {ele.description}</ListGroup.Item>
-                    <ListGroup.Item>Status: {ele.status}</ListGroup.Item>
-                  </ListGroup>
-
-                  <Button className='m-3 btn btn-danger' onClick={() => this.deleteBook(indx)}>Delete Book</Button>
-                  <Button className='m-3 btn btn-danger' onClick={() => this.showUpdateForm(indx)}>Update Book</Button>
-                </Card>;
-              </>
-            )
-          })
-        }
-
 
       </Jumbotron >
-      //} </>
     );
 
   }
