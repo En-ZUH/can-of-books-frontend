@@ -15,7 +15,7 @@ import Profile from './Profile';
 class App extends React.Component {
 
   render() {
-    console.log('app', this.props);
+    console.log('app', this.props);//at first was empty
     //const {user, is Authenticated}=this.props.auth0;
     return (
       <>
@@ -45,3 +45,4 @@ class App extends React.Component {
 }
 
 export default withAuth0(App);
+//3/instal
